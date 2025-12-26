@@ -33,6 +33,10 @@ CREATE POLICY "Public can create orders" ON orders
 CREATE POLICY "Admins can update orders" ON orders
   FOR UPDATE USING (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
 
+-- Admins can delete orders
+CREATE POLICY "Admins can delete orders" ON orders
+  FOR DELETE USING (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
+
 -- Policies for Profiles
 -- Users can read their own profile
 CREATE POLICY "Users can view own profile" ON profiles

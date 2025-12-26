@@ -322,12 +322,7 @@ const AdminOrders: React.FC = () => {
 
   const fetchOrders = async () => {
     let q = supabase.from('orders').select('*').order('created_at', { ascending: false });
-    if (statusFilter !== 'ALL') {
-      q = q.eq('status', statusFilter);
-    } else {
-      // When showing ALL, exclude cancelled orders
-      q = q.neq('status', 'CANCELADO');
-    }
+    if (statusFilter !== 'ALL') q = q.eq('status', statusFilter);
     const { data } = await q;
     if (data) setOrders(data);
   };
@@ -345,6 +340,23 @@ const AdminOrders: React.FC = () => {
     } catch (err) {
       alert('Error inesperado al actualizar pedido');
       console.error('Unexpected error:', err);
+    }
+  };
+
+  const deleteOrder = async (id: string) => {
+    if (window.confirm('¿Eliminar este pedido permanentemente? Esta acción no se puede deshacer.')) {
+      try {
+        const { error } = await supabase.from('orders').delete().eq('id', id);
+        if (error) {
+          alert('Error al eliminar: ' + error.message);
+        } else {
+          alert('Pedido eliminado correctamente');
+          fetchOrders();
+        }
+      } catch (err) {
+        alert('Error inesperado al eliminar pedido');
+        console.error(err);
+      }
     }
   };
 
@@ -412,7 +424,7 @@ const AdminOrders: React.FC = () => {
               {order.status === 'EN_PREPARACION' && (
                 <button onClick={() => updateStatus(order.id, 'ENVIADO')} className="bg-purple-600 text-white px-3 py-1 rounded text-sm">Enviar</button>
               )}
-              <button onClick={() => updateStatus(order.id, 'CANCELADO')} className="border border-red-500 text-red-500 px-3 py-1 rounded text-sm ml-auto">Cancelar</button>
+              <button onClick={() => deleteOrder(order.id)} className="border border-red-500 text-red-500 px-3 py-1 rounded text-sm ml-auto">Eliminar Pedido</button>
             </div>
           </div>
         ))}
