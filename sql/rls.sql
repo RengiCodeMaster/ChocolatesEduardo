@@ -29,6 +29,10 @@ CREATE POLICY "Admins can view all orders" ON orders
 CREATE POLICY "Public can create orders" ON orders
   FOR INSERT WITH CHECK (true);
 
+-- Admins can update orders (change status, etc.)
+CREATE POLICY "Admins can update orders" ON orders
+  FOR UPDATE USING (auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin'));
+
 -- Policies for Profiles
 -- Users can read their own profile
 CREATE POLICY "Users can view own profile" ON profiles
