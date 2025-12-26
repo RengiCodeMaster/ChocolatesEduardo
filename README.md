@@ -1,20 +1,47 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Don Eduardo - Chocolates Artesanales 🍫
 
-# Run and deploy your AI Studio app
+Tienda online exclusiva para la venta de chocolates artesanales provenientes del Valle de Monzón, Huánuco, Perú.
 
-This contains everything you need to run your app locally.
+## 🚀 Tecnologías
 
-View your app in AI Studio: https://ai.studio/apps/drive/12Gty6JoynAh-Ec-0mtPTS4uxdVIg3WNs
+*   **Frontend:** React 19, TypeScript, Vite
+*   **Estilos:** Tailwind CSS, Framer Motion
+*   **Backend / Base de Datos:** Supabase
+*   **Routing:** React Router DOM
+*   **Iconos:** Lucide React
 
-## Run Locally
+## 🛠️ Instalación y Ejecución Local
 
-**Prerequisites:**  Node.js
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone https://github.com/RengiCodeMaster/ChocolatesEduardo.git
+    cd don-eduarte---chocolates-artesanales
+    ```
 
+2.  **Instalar dependencias:**
+    ```bash
+    npm install
+    ```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+3.  **Configurar variables de entorno:**
+    Crea un archivo `.env.local` en la raíz del proyecto y agrega tus credenciales de Supabase (puedes guiarte de `.env.example`):
+    ```env
+    VITE_SUPABASE_URL=tu_url_de_supabase
+    VITE_SUPABASE_ANON_KEY=tu_anon_key_de_supabase
+    ```
+
+4.  **Correr el servidor de desarrollo:**
+    ```bash
+    npm run dev
+    ```
+
+## 📦 Despliegue
+
+Este proyecto está configurado para desplegarse fácilmente en **Vercel**.
+
+1.  Importa el repositorio en Vercel.
+2.  En la configuración del proyecto en Vercel, agrega las variables de entorno (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`).
+3.  Despliega.
+
+---
+Hecho con ❤️ y Cacao del Monzón.
