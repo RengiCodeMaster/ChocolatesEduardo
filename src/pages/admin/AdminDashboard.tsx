@@ -33,9 +33,19 @@ const AdminCategories: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('¿Eliminar categoría?')) {
-      await supabase.from('categories').delete().eq('id', id);
-      fetchCategories();
+    if (window.confirm('¿Eliminar categoría? Los productos con esta categoría quedarán sin categoría asignada.')) {
+      try {
+        const { error } = await supabase.from('categories').delete().eq('id', id);
+        if (error) {
+          alert('Error al eliminar: ' + error.message);
+        } else {
+          alert('Categoría eliminada correctamente');
+          fetchCategories();
+        }
+      } catch (err) {
+        alert('Error inesperado al eliminar categoría');
+        console.error(err);
+      }
     }
   };
 
@@ -154,20 +164,43 @@ const AdminProducts: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editing) {
-      await supabase.from('products').update(form).eq('id', editing.id);
-    } else {
-      await supabase.from('products').insert(form);
+    try {
+      let result;
+      if (editing) {
+        result = await supabase.from('products').update(form).eq('id', editing.id);
+      } else {
+        result = await supabase.from('products').insert(form);
+      }
+
+      if (result.error) {
+        alert('Error al guardar: ' + result.error.message);
+        return;
+      }
+
+      alert(editing ? 'Producto actualizado correctamente' : 'Producto creado correctamente');
+      setEditing(null);
+      setForm({ category: categories[0]?.slug || '', images: [] });
+      fetchProducts();
+    } catch (err) {
+      alert('Error inesperado al guardar producto');
+      console.error(err);
     }
-    setEditing(null);
-    setForm({ category: categories[0]?.slug || '', images: [] });
-    fetchProducts();
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('¿Eliminar producto?')) {
-      await supabase.from('products').delete().eq('id', id);
-      fetchProducts();
+    if (window.confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')) {
+      try {
+        const { error } = await supabase.from('products').delete().eq('id', id);
+        if (error) {
+          alert('Error al eliminar: ' + error.message);
+        } else {
+          alert('Producto eliminado correctamente');
+          fetchProducts();
+        }
+      } catch (err) {
+        alert('Error inesperado al eliminar producto');
+        console.error(err);
+      }
     }
   };
 
