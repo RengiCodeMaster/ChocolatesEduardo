@@ -69,8 +69,8 @@ const AdminCategories: React.FC = () => {
         </button>
       </form>
 
-      <div className="bg-white rounded shadow">
-        <table className="w-full text-left border-collapse">
+      <div className="bg-white rounded shadow overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[600px]">
           <thead>
             <tr className="bg-gray-100">
               <th className="p-4">Nombre</th>
@@ -367,6 +367,7 @@ export const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'stats' | 'orders' | 'products' | 'categories'>('stats');
   const [stats, setStats] = useState({ totalOrders: 0, pending: 0, revenue: 0 });
   const [authLoading, setAuthLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -439,7 +440,23 @@ export const AdminDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-cacao-900 text-white flex flex-col fixed h-full hidden md:flex">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        className="md:hidden fixed top-4 left-4 z-50 bg-cacao-900 text-white p-3 rounded-lg shadow-lg"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {mobileMenuOpen ? (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          )}
+        </svg>
+      </button>
+
+      {/* Sidebar */}
+      <aside className={`w-64 bg-cacao-900 text-white flex flex-col fixed h-full z-40 transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        } md:translate-x-0`}>
         <div className="p-6 font-serif font-bold text-xl">Admin Panel</div>
         <nav className="flex-1 px-4 space-y-2">
           <button onClick={() => setActiveTab('stats')} className={`w-full text-left p-3 rounded flex items-center gap-3 ${activeTab === 'stats' ? 'bg-gold-600' : 'hover:bg-cacao-800'}`}>
@@ -462,8 +479,16 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </aside>
 
+      {/* Overlay for mobile */}
+      {mobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-30"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Content */}
-      <main className="flex-1 md:ml-64 p-8">
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8">
         <div className="md:hidden mb-4 flex justify-between">
           <span className="font-bold">Admin Panel</span>
           <button onClick={handleLogout}>Salir</button>
