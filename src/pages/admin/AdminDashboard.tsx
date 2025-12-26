@@ -190,6 +190,18 @@ const AdminProducts: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')) {
       try {
+        // First check if product has orders
+        const { data: orderItems } = await supabase
+          .from('order_items')
+          .select('id')
+          .eq('product_id', id)
+          .limit(1);
+
+        if (orderItems && orderItems.length > 0) {
+          alert('⚠️ No se puede eliminar este producto porque tiene pedidos asociados.\n\nEn su lugar, puedes:\n1. Poner el stock en 0 para que no se pueda comprar\n2. Editar el nombre para marcarlo como "DESCONTINUADO"');
+          return;
+        }
+
         const { error } = await supabase.from('products').delete().eq('id', id);
         if (error) {
           alert('Error al eliminar: ' + error.message);
