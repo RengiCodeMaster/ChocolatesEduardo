@@ -328,8 +328,19 @@ const AdminOrders: React.FC = () => {
   };
 
   const updateStatus = async (id: string, status: string) => {
-    await supabase.from('orders').update({ status }).eq('id', id);
-    fetchOrders();
+    try {
+      const { error } = await supabase.from('orders').update({ status }).eq('id', id);
+      if (error) {
+        alert('Error al actualizar estado: ' + error.message);
+        console.error('Update error:', error);
+      } else {
+        alert(`Estado actualizado a: ${status}`);
+        fetchOrders();
+      }
+    } catch (err) {
+      alert('Error inesperado al actualizar pedido');
+      console.error('Unexpected error:', err);
+    }
   };
 
   return (
