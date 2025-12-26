@@ -322,7 +322,12 @@ const AdminOrders: React.FC = () => {
 
   const fetchOrders = async () => {
     let q = supabase.from('orders').select('*').order('created_at', { ascending: false });
-    if (statusFilter !== 'ALL') q = q.eq('status', statusFilter);
+    if (statusFilter !== 'ALL') {
+      q = q.eq('status', statusFilter);
+    } else {
+      // When showing ALL, exclude cancelled orders
+      q = q.neq('status', 'CANCELADO');
+    }
     const { data } = await q;
     if (data) setOrders(data);
   };
